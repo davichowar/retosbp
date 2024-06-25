@@ -1,0 +1,65 @@
+version: '3.7'
+
+networks:
+    contenedores:
+        external:
+            name: principal
+
+services:
+    flight-frontend:
+        container_name: flight-frontend
+        build:
+          context: ./flight-frontend
+          dockerfile: prod.Dockerfile
+        expose:
+            - 80
+        networks:
+            - contenedores
+        depends_on:
+            - flight-backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.flight-frontend.rule=Host(`flight.alchimia-innovation.com`)"
+            - "traefik.http.routers.flight-frontend.tls=true"
+            - "traefik.http.routers.flight-frontend.tls.certresolver=letsencrypt"
+
+    flight-backend:
+        container_name: flight-backend
+        build:
+            context: ./flight-backend
+            dockerfile: Dockerfile
+        command: gunicorn --worker-class gevent --bind 0.0.0.0:5000 manage:app
+        volumes:
+            - './flight-backend:/usr/src/app'
+        expose:
+            - 5000
+        networks:
+            - contenedores
+        env_file:
+            - ./.env
+        depends_on:
+            - flight-db
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.flight-backend.rule=Host(`flight-backend.alchimia-innovation.com`)"
+            - "traefik.http.routers.flight-backend.tls=true"
+            - "traefik.http.routers.flight-backend.tls.certresolver=letsencrypt"
+    
+    flight-db:
+        container_name: flight-db
+        restart: always
+        image: postgres:latest
+        env_file:
+            - ./.env
+        volumes:
+            - flight_db_data:/var/lib/postgresql/data
+            - ./DB:/docker-entrypoint-initdb.d
+        ports:
+            - "5435:5432"
+        networks:
+            - contenedores
+        labels:
+            - "traefik.enable=true"
+
+volumes: 
+    flight_db_data:
