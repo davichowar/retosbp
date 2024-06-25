@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+    flight-frontend:
+        container_name: flight-frontend
+        restart: always
+        build:
+          context: ./flight-frontend
+          dockerfile: Dockerfile
+        volumes:
+          - './flight-frontend:/usr/src/app'
+          - '/usr/src/app/node_modules'
+        ports:
+          - '4205:4200'
+        depends_on:
+            - flight-backend
+
+    flight-backend:
+        container_name: flight-backend
+        restart: always
+        build:
+            context: ./flight-backend
+            dockerfile: Dockerfile
+        command: gunicorn --worker-class gevent --bind 0.0.0.0:5000 manage:app
+        volumes:
+            - './flight-backend:/usr/src/app'
+        # expose: 
+            # - 5000
+        ports:
+            - '5005:5000'
+        env_file:
+            - ./.env
+        depends_on: 
+            - flight-db
+    
+    flight-db:
+        container_name: flight-db
+        restart: always
+        image: postgres:latest
+        env_file:
+            - ./.env
+        volumes:
+            - flight_db_data:/var/lib/postgresql/data
+            - ./DB:/docker-entrypoint-initdb.d
+        # expose: 
+            # - 5432
+        ports:
+            - "5435:5432"
+
+volumes: 
+    flight_db_data:

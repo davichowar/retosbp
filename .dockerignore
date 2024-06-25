@@ -1,0 +1,7 @@
+flight-frontend/node_modules
+flight-frontend/npm-debug.log
+flight-frontend/dist
+
+.git
+
+flight-backend/app/api-rest.log
