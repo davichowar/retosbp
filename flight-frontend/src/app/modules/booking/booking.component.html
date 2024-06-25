@@ -1,0 +1,36 @@
+<div class="grid flex-column">
+    <!-- TOOLBAR -->
+    <div class="col">
+        <app-toolbar></app-toolbar>
+    </div>
+    <div class="grid" style="margin-left: 7px; margin-right: 1px;">
+        <!-- CONTENEDOR -->
+        <div class="col">
+            <p-tabView [(activeIndex)]="activeIndex">
+                <p-tabPanel header="Búsqueda de vuelos" [disabled]="selectedSeat !== null">
+                    <app-flights-search></app-flights-search>
+                    <br/>
+                    <p-button
+                        label="Ir a reserva"
+                        icon="pi pi-search"
+                        [disabled]="!selectedFlight"
+                        (click)="activeIndex = 1">
+                    </p-button>
+                </p-tabPanel>
+                <p-tabPanel header="Detalles de la reserva" [disabled]="!selectedFlight || selectedSeat !== null">
+                    <app-flight-reservation></app-flight-reservation>
+                    <br/>
+                    <p-button
+                        label="Ir a pagar"
+                        icon="pi pi-paypal"
+                        [disabled]="!selectedSeat"
+                        (click)="activeIndex = 2">
+                    </p-button>
+                </p-tabPanel>
+                <p-tabPanel header="Pago" [disabled]="!selectedSeat">
+                    <app-reservation-payment></app-reservation-payment>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+  </div>

@@ -1,0 +1,26 @@
+<p-toast></p-toast>
+<p-card header="SELECCIÓN DE ASIENTO">
+    <div class="seat-map" *ngIf="!seatConfirmed">
+        <div *ngFor="let row of getSeatRows()" class="seat-row">
+          <div *ngFor="let seat of row" 
+               class="seat"
+               [ngClass]="{'selected': isSelected(seat), 'occupied': seat.is_occupied, 'disabled': seat.is_occupied}"
+               (click)="selectSeat(seat)">
+            {{ seat.seat_number }}
+          </div>
+        </div>
+    </div>
+      
+    <p *ngIf="selectedSeat"><span style="font-weight: bold;">Asiento seleccionado:</span> {{ selectedSeat.seat_number }}</p>
+    <p *ngIf="selectedSeat"><span style="font-weight: bold;">Precio</span> {{ selectedFlight.price | currency: 'USD' }}</p>
+    
+    <p-button
+        label="Confirmar selección"
+        icon="pi pi-thumbs-up"
+        [disabled]="!selectedSeat || selectedSeat.is_occupied"
+        *ngIf="!seatConfirmed"
+        (click)="confirmSeatOccupation(selectedSeat)">
+    </p-button>
+</p-card>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

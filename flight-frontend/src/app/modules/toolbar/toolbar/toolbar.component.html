@@ -1,0 +1,65 @@
+<p-toolbar>
+    <div class="toolbar-group-left">
+      <img
+        src="assets/logo.png"
+        width="50%"
+      />
+    </div>
+  
+    <div class="toolbar-group-right">
+      
+      <!-- BOTONES -->
+      <div class="flex flex-row flex-wrap justify-content-end m-2">
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-home"
+          class="p-button-rounded p-button-outlined p-button-success m-2"
+          routerLink="/main"
+          pTooltip="Módulos"
+          tooltipPosition="bottom"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-power-off"
+          class="p-button-rounded p-button-outlined p-button-danger m-2"
+          (click)="userService.logout()"
+          pTooltip="Salir"
+          tooltipPosition="bottom"
+        ></button>
+      </div>
+      <div class="flex">
+        <!-- FOTO -->
+        <div class="flex-initial">
+          <img
+            [src]="usuario.picture"
+            style="width: 60px; height: 70px"
+          />
+        </div>
+        <!-- DATOS USUARIO -->
+        <div class="flex-initial justify-content-center">
+          <div class="flex">
+            <div
+              class="flex flex-row flex-wrap justify-content-center m-2"
+              style="font-size: smaller">
+              <span style="font-weight: bold">Usuario: &nbsp;</span>
+              {{ usuario ? usuario.name : "" }}
+            </div>
+          </div>
+
+          <div class="flex">
+            <div
+              class="flex flex-row flex-wrap justify-content-center m-2"
+              style="font-size: smaller">
+              <span style="font-weight: bold">Email: &nbsp;</span>
+              {{ usuario ? usuario.email : "" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-toolbar>
+  

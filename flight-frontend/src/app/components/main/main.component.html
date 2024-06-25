@@ -1,0 +1,27 @@
+<div class="grid flex-column">
+    <!-- TOOLBAR -->
+    <div class="col">
+        <app-toolbar></app-toolbar>
+    </div>
+    <!-- MODULOS -->
+    <div class="grid" style="margin-left: 1px; margin-right: 1px;">
+      <div class="col" style="margin-top: 8px;">
+        <p-panel header="MÓDULOS DISPONIBLES">
+          <div class="flex flex-row flex-wrap justify-content-center m-2">
+              <div class="m-2" *ngFor="let modulo of modulos; let i=index">
+                  <p-button
+                    styleClass="p-button-raised p-button-secondary"
+                    (click)="cargarModulo( modulo )"
+                    [pTooltip]="modulo.module_name"
+                    tooltipPosition="bottom">
+                      <ng-template pTemplate="content">
+                          <img [src]="'assets/' + modulo.icon + '.png'" alt="modulo.module_name" style="width: 15rem;">
+                      </ng-template>
+                  </p-button>
+              </div>
+          </div>
+        </p-panel>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,102 @@
+<p-toast></p-toast>
+<p-card header="BÚSQUEDA DE VUELOS">
+  <form [formGroup]="searchForm">
+    <div class="formgrid grid">
+      <!-- CIUDAD DE SALIDA -->
+      <div class="field col-12 md:col-6 mt-2">
+        <span class="p-float-label">
+          <p-dropdown
+              id="departure"
+              [options]="departureCities"
+              formControlName="departure_city"
+              [filter]="true"
+              [style]="{ width: '100%' }">
+          </p-dropdown>
+          <label for="departure">*Ciudad de salida</label>
+          <small class="p-error">{{
+              formulariosService.getErrors(searchForm.get('departure_city'), 'Ciudad de salida')
+          }}</small>
+        </span>
+      </div>
+      <!-- CIUDAD DE LLEGADA -->
+      <div class="field col-12 md:col-6 mt-2">
+        <span class="p-float-label">
+          <p-dropdown
+              id="arrival"
+              [options]="arrivalCities"
+              formControlName="arrival_city"
+              [filter]="true"
+              [style]="{ width: '100%' }">
+          </p-dropdown>
+          <label for="arrival">*Ciudad de llegada</label>
+          <small class="p-error">{{
+              formulariosService.getErrors(searchForm.get('arrival_city'), 'Ciudad de llegada')
+          }}</small>
+        </span>
+      </div>
+    </div>
+    <!-- BOTON DE BUSQUEDA -->
+    <p-button
+        class="p-mt-2"
+        label="Buscar"
+        icon="pi pi-search"
+        [disabled]="searchForm.invalid"
+        (click)="searchFlights()">
+    </p-button>
+  </form>
+</p-card>
+<br/>
+<p-card header="VUELOS ENCONTRADOS">
+    <p-table
+        #dt
+        [value]="filteredFlights"
+        [rowHover]="true"
+        dataKey="flight_id"
+        [(selection)]="selectedFlight"
+        styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="text-align: center">N° VUELO</th>
+                <th pSortableColumn="airline" style="text-align: center">AEROLÍNEA</th>
+                <th style="text-align: center">AEROPUERTO SALIDA</th>
+                <th style="text-align: center">AEROPUERTO LLEGADA</th>
+                <th style="text-align: center">HORA SALIDA</th>
+                <th style="text-align: center">HORA LLEGADA</th>
+                <th pSortableColumn="price" style="text-align: center">PRECIO</th>
+                <th style="text-align: center">ACCIÓN</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-flight>
+            <tr [pSelectableRow]="flight">
+                <td style="text-align: center">{{ flight.flight_number | uppercase }}</td>
+                <td style="text-align: center">{{ flight.airline | uppercase }}</td>
+                <td style="text-align: center">{{ flight.departure_city + " (" + flight.departure_airport + ")" | uppercase }}</td>
+                <td style="text-align: center">{{ flight.arrival_city + " (" + flight.arrival_airport + ")" | uppercase }}</td>
+                <td style="text-align: center">{{ flight.departure_time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td style="text-align: center">{{ flight.arrival_time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td style="text-align: center">{{ flight.price | currency: 'USD' }}</td>
+                <td style="text-align: center">
+                    <button
+                      pButton
+                      pRipple
+                      icon="pi pi-cart-plus"
+                      class="p-button-rounded p-button-success p-mr-2"
+                      (click)="selectFlight(flight)"
+                      pTooltip="Seleccionar"
+                      tooltipPosition="bottom"
+                    ></button>
+                  </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td [attr.colspan]="6">No existen vuelos</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+            Total vuelos: {{ filteredFlights ? filteredFlights.length : 0 }}
+          </div>
+        </ng-template>
+    </p-table>
+</p-card>

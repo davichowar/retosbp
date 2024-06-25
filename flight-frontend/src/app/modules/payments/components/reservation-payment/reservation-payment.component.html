@@ -1,0 +1,101 @@
+<p-toast></p-toast>
+<p-card header="PAGO DE RESERVA">
+  <div class="card">
+    <form [formGroup]="paymentForm">
+        <div class="formgrid grid">
+            <!-- METODO DE PAGO -->
+            <p-fieldset legend="Método de pago" class="col-12">
+                <div class="field col-12 mt-2">
+                    <div class="field col-12 mt-2">
+                        <div style="font-weight: bold">*Medio de pago</div>
+                        <div class="formgroup-inline mt-2">
+                          <div class="field-radiobutton">
+                            <p-radioButton
+                              value="PayPal"
+                              formControlName="method"
+                              inputId="pp"
+                            ></p-radioButton>
+                            <label for="pp">PayPal</label>
+                          </div>
+                          <div class="field-radiobutton">
+                            <p-radioButton
+                              value="Stripe"
+                              formControlName="method"
+                              inputId="st"
+                            ></p-radioButton>
+                            <label for="st">Stripe</label>
+                          </div>
+                          <div class="field-radiobutton">
+                            <p-radioButton
+                              value="Tarjeta de Crédito"
+                              formControlName="method"
+                              inputId="cc"
+                            ></p-radioButton>
+                            <label for="cc">Tarjeta de crédito</label>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </p-fieldset>
+
+            <!-- DATOS DE TARJETA -->
+            <p-fieldset legend="Datos de la tarjeta" 
+                class="col-12"
+                *ngIf="paymentForm.controls['method'].value === 'Tarjeta de Crédito'" >
+                <div class="field col-12 mt-2">
+                    <span class="p-float-label">
+                        <p-inputNumber
+                            inputId="cardnumber"
+                            formControlName="cardNumber"
+                            [useGrouping]="false">
+                        </p-inputNumber>
+                        <small class="p-error">
+                            {{formulariosService.getErrors(paymentForm.get("cardNumber"),"Número de tarjeta")}}
+                        </small>
+                        <label htmlFor="cardnumber">Número de tarjeta</label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-3 mt-4">
+                    <span class="p-float-label">
+                        <p-inputMask
+                            mask="99 / 99"
+                            inputId="cardexpiry"
+                            placeholder="MM / AA"
+                            formControlName="cardExpiry">
+                        </p-inputMask>
+                        <small class="p-error">
+                            {{formulariosService.getErrors(paymentForm.get("cardExpiry"),"Expiración")}}
+                        </small>
+                        <label htmlFor="cardexpiry">Expiración</label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-3 mt-4">
+                    <span class="p-float-label">
+                        <p-password
+                            inputId="cvc"
+                            formControlName="cardCVC"
+                            [toggleMask]="true"
+                            [feedback]="false"
+                            minlength="3"
+                            maxlength="3">
+                        </p-password>
+                        <small class="p-error">
+                            {{formulariosService.getErrors(paymentForm.get("cardCVC"),"CVC")}}
+                        </small>
+                        <label htmlFor="cvc">CVC</label>
+                    </span>
+                </div>
+            </p-fieldset>
+        </div>
+        <br/>
+        <p-button
+            class="p-mt-2"
+            label="Pagar"
+            icon="pi pi-money-bill"
+            [disabled]="validatePaymentMethod()"
+            (click)="onPay()">
+        </p-button>
+    </form>
+    
+  </div>
+</p-card>
