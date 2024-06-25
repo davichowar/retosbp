@@ -1,0 +1,7 @@
+import os
+
+DEBUG = True
+
+# BASE DE DATOS
+SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite://")
+SQLALCHEMY_TRACK_MODIFICATIONS = True
